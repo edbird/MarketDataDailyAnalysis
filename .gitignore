@@ -1,5 +1,6 @@
 activate
 api_token
+market_data/api_token
 bootstrap_data.numpy
 ll_values.numpy
 plot_aapl_likelihood/bootstrap_data/*.png
