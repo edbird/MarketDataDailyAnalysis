@@ -94,12 +94,12 @@ def optimize_function_likelihood(p, x, y):
 def main():
 
     # Load AAPL
-    eod_aapl_us = pandas.read_csv('eod_aapl_us.csv', dtype='str', delimiter=',')
+    eod_aapl_us = pandas.read_csv('./market_data/eod_aapl_us.csv', dtype='str', delimiter=',')
     eod_aapl_us['Date'] = pandas.to_datetime(eod_aapl_us['Date'])
     eod_aapl_us['Close'] = eod_aapl_us['Close'].apply(lambda close: float(close))
 
     # Load NVDA
-    eod_nvda_us = pandas.read_csv('eod_nvda_us.csv', dtype='str', delimiter=',')
+    eod_nvda_us = pandas.read_csv('./market_data/eod_nvda_us.csv', dtype='str', delimiter=',')
     eod_nvda_us['Date'] = pandas.to_datetime(eod_nvda_us['Date'])
     eod_nvda_us['Close'] = eod_nvda_us['Close'].apply(lambda close: float(close))
 
@@ -281,7 +281,7 @@ def main():
         loc='upper left', bbox_to_anchor=(0.7,1), fontsize=8)
 
 
-    fig.savefig('eod_aapl_us_diff_errorbar_sql_ml.png')
+    fig.savefig('eod_aapl_us_diff_errorbar_lsq_ml.png')
 
 
 

@@ -21,12 +21,12 @@ def gaussian(x, amplitude, mean, stddev):
 def main():
 
     # Load AAPL
-    eod_aapl_us = pandas.read_csv('eod_aapl_us.csv', dtype='str', delimiter=',')
+    eod_aapl_us = pandas.read_csv('./market_data/eod_aapl_us.csv', dtype='str', delimiter=',')
     eod_aapl_us['Date'] = pandas.to_datetime(eod_aapl_us['Date'])
     eod_aapl_us['Close'] = eod_aapl_us['Close'].apply(lambda close: float(close))
 
     # Load NVDA
-    eod_nvda_us = pandas.read_csv('eod_nvda_us.csv', dtype='str', delimiter=',')
+    eod_nvda_us = pandas.read_csv('./market_data/eod_nvda_us.csv', dtype='str', delimiter=',')
     eod_nvda_us['Date'] = pandas.to_datetime(eod_nvda_us['Date'])
     eod_nvda_us['Close'] = eod_nvda_us['Close'].apply(lambda close: float(close))
 
