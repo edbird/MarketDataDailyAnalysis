@@ -91,7 +91,7 @@ def plot_diff_with_stddev(eod_aapl_us_diff, aapl_us_diff_std):
     
     ax.plot(curve_data_x, curve_data_y)
     
-    fig.savefig('plot_aapl_likelihood/eod_aapl_us_diff.png')
+    fig.savefig('eod_aapl_us_diff.png')
 
 
 def perform_fitting_procedure(data, x0, index, disp=False):
@@ -141,19 +141,19 @@ def plot_failed_fit(index, bin_midpoints, bin_contents, amplitude, mean, stddev)
     ymax = 1.2 * bin_contents.max()
     ax.set_ylim(ymax=ymax)
     
-    fig.savefig(f'plot_aapl_likelihood/failed_fit/failed_fit_{index}.png')
+    fig.savefig(f'failed_fit_figure/failed_fit_{index}.png')
     plt.close() 
     
     
 def main():
 
     # Load AAPL
-    eod_aapl_us = pandas.read_csv('eod_aapl_us.csv', dtype='str', delimiter=',')
+    eod_aapl_us = pandas.read_csv('./market_data/eod_aapl_us.csv', dtype='str', delimiter=',')
     eod_aapl_us['Date'] = pandas.to_datetime(eod_aapl_us['Date'])
     eod_aapl_us['Close'] = eod_aapl_us['Close'].apply(lambda close: float(close))
 
     # Load NVDA
-    eod_nvda_us = pandas.read_csv('eod_nvda_us.csv', dtype='str', delimiter=',')
+    eod_nvda_us = pandas.read_csv('./market_data/eod_nvda_us.csv', dtype='str', delimiter=',')
     eod_nvda_us['Date'] = pandas.to_datetime(eod_nvda_us['Date'])
     eod_nvda_us['Close'] = eod_nvda_us['Close'].apply(lambda close: float(close))
 
@@ -257,7 +257,7 @@ def main():
     ax2.errorbar(bin_midpoints + xoffset, bin_contents - hist_data_model_curve_2, yerr=numpy.sqrt(bin_contents), \
         linestyle='none', marker='o', capsize=3, capthick=1, color='tab:orange')
 
-    fig.savefig('plot_aapl_likelihood/eod_aapl_us_diff_errorbar_likelihood.png')
+    fig.savefig('eod_aapl_us_diff_errorbar_likelihood.png')
 
 
 if __name__ == '__main__':

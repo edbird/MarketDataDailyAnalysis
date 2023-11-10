@@ -191,7 +191,7 @@ def plot_bootstrap_data(iteration, bootstrap_sample):
     (bin_contents, bin_edges, _) = \
         ax.hist(bootstrap_sample, label='AAPL', bins=20, density=False)
     
-    fig.savefig(f'plot_aapl_likelihood/bootstrap_data/bootstrap_{iteration}.png')
+    fig.savefig(f'bootstrap_data_figure/bootstrap_{iteration}.png')
     plt.close()
         
         
@@ -211,7 +211,7 @@ def plot_failed_fit(index, bin_midpoints, bin_contents, amplitude, mean, stddev)
     ymax = 1.2 * bin_contents.max()
     ax.set_ylim(ymax=ymax)
     
-    fig.savefig(f'plot_aapl_likelihood/failed_fit/failed_fit_{index}.png')
+    fig.savefig(f'failed_fit_figure/failed_fit_{index}.png')
     plt.close() 
     
     
@@ -248,7 +248,7 @@ def parallel_function(x):
         return fval
     else:
         # save data for processing later
-        numpy.savetxt(f'plot_aapl_likelihood/bootstrap_data_txt/data_{index}.txt', data)
+        numpy.savetxt(f'bootstrap_data_txt/data_{index}.txt', data)
     
     print(f'RETURN NONE!')
     return None
@@ -257,12 +257,12 @@ def parallel_function(x):
 def main():
 
     # Load AAPL
-    eod_aapl_us = pandas.read_csv('eod_aapl_us.csv', dtype='str', delimiter=',')
+    eod_aapl_us = pandas.read_csv('./market_data/eod_aapl_us.csv', dtype='str', delimiter=',')
     eod_aapl_us['Date'] = pandas.to_datetime(eod_aapl_us['Date'])
     eod_aapl_us['Close'] = eod_aapl_us['Close'].apply(lambda close: float(close))
 
     # Load NVDA
-    eod_nvda_us = pandas.read_csv('eod_nvda_us.csv', dtype='str', delimiter=',')
+    eod_nvda_us = pandas.read_csv('./market_data/eod_nvda_us.csv', dtype='str', delimiter=',')
     eod_nvda_us['Date'] = pandas.to_datetime(eod_nvda_us['Date'])
     eod_nvda_us['Close'] = eod_nvda_us['Close'].apply(lambda close: float(close))
 
@@ -338,7 +338,7 @@ def main():
     
         print(f'Number of ll values to generate: {len(bootstrap_data_to_process)}')
     
-        with Pool(processes=12) as pool:
+        with Pool(processes=10) as pool:
             
             # NOTE: now estimate x0 each time to improve chance of convergence
             #bootstrap_data_x0 = []
