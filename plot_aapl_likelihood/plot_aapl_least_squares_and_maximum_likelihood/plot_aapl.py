@@ -53,12 +53,12 @@ def optimize_function_likelihood(p, x, y):
     mean = p[1]
     stddev = p[2]
 
-    print('optimize:')
-    print(amplitude)
-    print(mean)
-    print(stddev)
-    print(x)
-    print(y)
+    #print('optimize:')
+    #print(amplitude)
+    #print(mean)
+    #print(stddev)
+    #print(x)
+    #print(y)
 
     # the change in price is expected to follow an exponential
     # distribution with a mean which is close to but not quite
