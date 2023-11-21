@@ -2,7 +2,9 @@ activate
 api_token
 market_data/api_token
 bootstrap_data.numpy
+bootstrap_data.numpy.bkp
 ll_values.numpy
+ll_values.numpy.bkp
 plot_aapl_likelihood/bootstrap_data/*.png
 
 # Byte-compiled / optimized / DLL files
