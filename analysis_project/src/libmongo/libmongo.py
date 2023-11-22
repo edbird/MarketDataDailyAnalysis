@@ -4,6 +4,8 @@ from pymongo import MongoClient
 
 #import json
 
+from libexperiment.experiment_record_mongo import ExperimentRecord
+
 
 
 class MongoInterfaceException(Exception):
@@ -50,7 +52,6 @@ def send_experiment_record(connection, experiment_record):
     collection.insert_one(document)
 
 
-
 def check_if_data_experiment_result_exists(connection):
 
     database = get_connection_database(connection)
@@ -71,7 +72,7 @@ def get_experiment_id_offset(connection):
     database = get_connection_database(connection)
     collection = database['maximum_likelihood_pseudodata']
 
-    document = collection.find_one(filter=None, sort={'experiment_id', -1})
+    document = collection.find_one(filter=None, sort={'experiment_id': -1})
 
     if document is None:
         return None
@@ -89,4 +90,111 @@ def get_experiment_id_offset(connection):
     else:
         for document in documents:
             return document['experiment_id']
+
+
+def get_log_likelihood_values_optimize_success(connection, limit=None):
+
+    database = get_connection_database(connection)
+    collection = database['maximum_likelihood_pseudodata']
+
+    query = {'optimize_success': True}
+    documents = None
+
+    if limit is not None:
+        documents = collection.find(query, limit=limit)
+    else:
+        documents = collection.find(query)
+
+    log_likelihood_values = []
+
+    for document in documents:
+        log_likelihood = document['optimize_log_likelihood']
+        log_likelihood_values.append(log_likelihood)
+
+    return log_likelihood_values
+
+
+def get_log_likelihood_values_optimize_fail(connection, limit=None):
+
+    database = get_connection_database(connection)
+    collection = database['maximum_likelihood_pseudodata']
+
+    query = {'optimize_success': False}
+    documents = None
+
+    if limit is not None:
+        documents = collection.find(query, limit=limit)
+    else:
+        documents = collection.find(query)
+
+    log_likelihood_values = []
+
+    for document in documents:
+        log_likelihood = document['optimize_log_likelihood']
+        log_likelihood_values.append(log_likelihood)
+
+    return log_likelihood_values
+
+
+def get_experiment_record_optimize_fail(connection, skip=None):
+
+    database = get_connection_database(connection)
+    collection = database['maximum_likelihood_pseudodata']
+
+    query = {'optimize_success': False}
+    document = None
+
+    if skip is not None:
+        document = collection.find_one(query, skip=skip)
+    else:
+        document = collection.find_one(query)
+
+    if document:
+        return ExperimentRecord.from_mongo_document(experiment_type='pseudodata', mongo_document=document)
+    else:
+        return None
+
+
+def get_experiment_records_optimize_fail(connection, limit=None):
+
+    database = get_connection_database(connection)
+    collection = database['maximum_likelihood_pseudodata']
+
+    query = {'optimize_success': False}
+    documents = None
+
+    if limit is not None:
+        documents = collection.find(query, limit=limit)
+    else:
+        documents = collection.find(query)
+
+    experiment_records = []
+    for document in documents:
+        experiment_record = ExperimentRecord.from_mongo_document(experiment_type='pseudodata', mongo_document=document)
+        experiment_records.append(experiment_record)
+
+    return experiment_records
+
+    #return ExperimentRecord.from_mongo_document(experiment_type='pseudodata', mongo_document=document)
+
+
+def get_experiment_records(connection, limit=None):
+
+    database = get_connection_database(connection)
+    collection = database['maximum_likelihood_pseudodata']
+
+    documents = None
+
+    if limit is not None:
+        documents = collection.find(limit=limit)
+    else:
+        documents = collection.find()
+
+    experiment_records = []
+
+    for document in documents:
+        experiment_record = ExperimentRecord.from_mongo_document(experiment_type='pseudodata', mongo_document=document)
+        experiment_records.append(experiment_record)
+
+    return experiment_records
 

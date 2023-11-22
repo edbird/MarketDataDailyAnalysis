@@ -34,3 +34,17 @@ def perform_fitting_procedure_unbinned(data, x0, disp=False):
 
     return optimize_result
 
+
+def perform_fitting_procedure_unbinned_simplex(data, x0, disp=False):
+
+    optimize_result = \
+        scipy.optimize.minimize(
+            optimize_function_likelihood_unbinned,
+            x0,
+            method='Nelder-Mead',
+            args=(data),
+            options={'disp': disp}
+        )
+
+    return optimize_result
+

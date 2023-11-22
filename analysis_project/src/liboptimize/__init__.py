@@ -1,3 +1,4 @@
 
 from liboptimize.optimize_unbinned import optimize_function_likelihood_unbinned as optimize_function_likelihood_unbinned
 from liboptimize.optimize_unbinned import perform_fitting_procedure_unbinned as perform_fitting_procedure_unbinned
+from liboptimize.optimize_unbinned import perform_fitting_procedure_unbinned_simplex

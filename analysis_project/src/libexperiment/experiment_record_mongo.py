@@ -67,6 +67,24 @@ class ExperimentRecord():
         return experiment_record
 
 
+    @classmethod
+    def from_mongo_document(class_, experiment_type, mongo_document):
+        experiment_record = class_()
+
+        experiment_record.experiment_id = mongo_document['experiment_id']
+        experiment_record.experiment_type = experiment_type
+        experiment_record.dataset = mongo_document['data']
+        experiment_record.init_mean = mongo_document['init_mean']
+        experiment_record.init_stddev = mongo_document['init_stddev']
+        experiment_record.init_log_likelihood = mongo_document['init_log_likelihood']
+        experiment_record.optimize_success = mongo_document['optimize_success']
+        experiment_record.optimize_mean = mongo_document['optimize_mean']
+        experiment_record.optimize_stddev = mongo_document['optimize_stddev']
+        experiment_record.optimize_log_likelihood = mongo_document['optimize_log_likelihood']
+
+        return experiment_record
+
+
     def get_dictionary(self):
 
         dictionary = {
@@ -89,4 +107,28 @@ class ExperimentRecord():
 
         return self.experiment_id
 
+
+    def get_dataset(self):
+        return self.dataset
+
+    def get_init_mean(self):
+        return self.init_mean
+
+    def get_init_stddev(self):
+        return self.init_stddev
+
+    def get_init_log_likelihood(self):
+        return self.init_log_likelihood
+
+    def get_optimize_success(self):
+        return self.optimize_success
+
+    def get_optimize_mean(self):
+        return self.optimize_mean
+
+    def get_optimize_stddev(self):
+        return self.optimize_stddev
+
+    def get_optimize_log_likelihood(self):
+        return self.optimize_log_likelihood
 
