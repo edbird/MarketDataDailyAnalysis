@@ -45,6 +45,7 @@ def main():
         else:
             connection = libmongo.get_connection_client()
             libmongo.send_experiment_record(connection, experiment_record)
+            connection.close()
 
 
     elif args.mode == 'pseudodata':
@@ -65,36 +66,43 @@ def main():
 
         connection = libmongo.get_connection_client()
         experiment_id_offset = libmongo.get_experiment_id_offset(connection)
+        connection.close()
 
         if experiment_id_offset is None:
             experiment_id_offset = 0
         else:
             experiment_id_offset = experiment_id_offset + 1
 
-        experiment_records = \
-            run_pseudodata_experiment_parallel_driver(
-                eod_aapl_us, experiment_id_offset, num_workers, num_pseudodata_experiments_per_worker)
+        # send data to MongoDB after generating this number of results
+        flush_batch_size = 10000
 
-        connection = libmongo.get_connection_client()
-        for experiment_record in experiment_records:
-            libmongo.send_experiment_record(connection, experiment_record)
+        #experiment_records = \
+        run_pseudodata_experiment_parallel_driver(
+            eod_aapl_us,
+            experiment_id_offset,
+            num_workers,
+            num_pseudodata_experiments_per_worker,
+            flush_batch_size)
 
     else:
         raise AnalysisException(f'invalid argument for mode {args.mode}')
 
 
-def run_pseudodata_experiment_parallel_driver(data, experiment_id_offset, num_workers, batch_size):
+def run_pseudodata_experiment_parallel_driver(data, experiment_id_offset, num_workers, batch_size, flush_batch_size):
 
     args_list = [
-        (data, experiment_id_offset, worker_index, num_workers, batch_size)
+        (data, experiment_id_offset, worker_index, num_workers, batch_size, flush_batch_size)
             for worker_index in range(num_workers)
     ]
 
+    print(f'Dispatching {num_workers} worker processes')
+
     with Pool(processes=num_workers) as pool:
 
-        experiment_record_lists = pool.map(parallel_function, args_list)
+        pool.map(parallel_function, args_list)
+        #experiment_record_lists = pool.map(parallel_function, args_list)
 
-        experiment_records = flatten_list(experiment_record_lists)
+        #experiment_records = flatten_list(experiment_record_lists)
 
         # check data ordering
 
@@ -112,7 +120,7 @@ def run_pseudodata_experiment_parallel_driver(data, experiment_id_offset, num_wo
 
         #experiment_records = sorted(experiment_records, key = lambda experiment_record: experiment_record.get_experiment_id())
 
-        return experiment_records
+        #return experiment_records
 
 
 def flatten_list(list):
@@ -123,12 +131,16 @@ def flatten_list(list):
 def parallel_function(args):
 
     # expand arguments
-    (data, experiment_id_offset, worker_index, num_workers, batch_size) = args
+    (data, experiment_id_offset, worker_index, num_workers, batch_size, flush_batch_size) = args
+
+    print(f'Starting worker {worker_index}')
 
     experiment_records = []
 
     experiment_batch_id_offset = worker_index * batch_size
     print(f'experiment_batch_id_offset={experiment_batch_id_offset}')
+
+    flush_batch_index_counter = 0
 
     for batch_index in range(batch_size):
 
@@ -140,7 +152,26 @@ def parallel_function(args):
 
         experiment_records.append(experiment_record)
 
-    return experiment_records
+        # flush data on final iteration, or when flush_batch_size is reached
+        # the greater than accounts for `flush_batch_size` being negative or zero
+        if (flush_batch_index_counter + 1 >= flush_batch_size) or (batch_index + 1 >= batch_size):
+
+            print(f'Worker {worker_index} flush results')
+
+            # send data to MongoDB
+            connection = libmongo.get_connection_client()
+            for experiment_record in experiment_records:
+                libmongo.send_experiment_record(connection, experiment_record)
+
+            connection.close()
+
+            experiment_records.clear()
+            flush_batch_index_counter = 0
+
+        else:
+            flush_batch_index_counter += 1
+
+    #return experiment_records
 
 
 def timed_main():
