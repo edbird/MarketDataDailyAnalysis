@@ -38,7 +38,7 @@ def run_bootstrap(experimental_data, number_of_bins, histogram_range):
         # the full range of experimental data is used
         # hence why the argument number_of_experiments is used twice, we want this many random
         # integers, and the range of values is [0, number_of_experiments - 1]
-        random_index = numpy.random.randint(number_of_experiments, size=number_of_experiments)
+        random_index = numpy.random.randint(number_of_experiments, size=number_of_experiments) #TODO: use new RNG
         #print(f'random_index: {random_index}')
 
         bootstrap_experimental_data = experimental_data[random_index]
@@ -92,7 +92,7 @@ def run_bootstrap(experimental_data, number_of_bins, histogram_range):
 
 def generate_experiment_run_data(number_of_events, maximum_value):
 
-    data = numpy.random.randint(maximum_value, size=number_of_events)
+    data = numpy.random.randint(maximum_value, size=number_of_events) # TODO: use new RNG
 
     #for data in data:
     #    if data >= 10:
