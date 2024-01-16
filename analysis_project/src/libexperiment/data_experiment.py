@@ -9,8 +9,10 @@ import libmongo
 
 
 def run_data_experiment(data):
-
-    data_experiment_result_exists = libmongo.check_if_data_experiment_result_exists()
+    
+    connection = libmongo.get_connection_client()
+    data_experiment_result_exists = libmongo.check_if_data_experiment_result_exists(connection)
+    connection.close()
 
     if data_experiment_result_exists:
         return None
@@ -23,6 +25,7 @@ def run_data_experiment(data):
 
     optimize_result = liboptimize.perform_fitting_procedure_unbinned(data, x_init)
     optimize_success = optimize_result.success
+    optimize_message = optimize_result.message
 
     #if not optimize_result.success:
         # do something to re-try
@@ -42,7 +45,8 @@ def run_data_experiment(data):
             log_likelihood_init,
             x_opt,
             log_likelihood_opt,
-            optimize_success)
+            optimize_success,
+            optimize_message)
 
     return experiment_record
 
