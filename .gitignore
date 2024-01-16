@@ -1,8 +1,8 @@
 activate
 api_token
 market_data/api_token
-*.numpy
-*.numpy.bkp
+*.npy
+*.npy.bkp
 *.exdb
 plot_aapl_likelihood/bootstrap_data/*.png
 plot_aapl_likelihood/plot_aapl_likelihood/bootstrap_data_txt/*
