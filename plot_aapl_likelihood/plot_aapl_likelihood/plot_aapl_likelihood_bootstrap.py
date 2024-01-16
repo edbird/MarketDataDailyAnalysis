@@ -126,7 +126,7 @@ def perform_fitting_procedure(data, x0, index, disp=False):
 
 def save_ll_values(ll_values):
 
-    filename = 'll_values.numpy'
+    filename = 'll_values.npy'
     numpy.savetxt(filename, ll_values)
 
 
@@ -136,7 +136,7 @@ def load_ll_values(target_number_of_ll_values):
 
     number_of_ll_values_loaded = None
     ll_values_from_file = None
-    filename = 'll_values.numpy'
+    filename = 'll_values.npy'
 
     if os.path.exists(filename):
         ll_values_from_file = numpy.loadtxt(filename)
@@ -162,7 +162,7 @@ def generate_bootstrap_data(eod_aapl_us_diff, number_of_bootstrap_samples):
 
     number_of_rows_loaded = None
     bootstrap_data_from_file = None
-    filename = 'bootstrap_data.numpy'
+    filename = 'bootstrap_data.npy'
 
     if os.path.exists(filename):
         bootstrap_data_from_file = numpy.loadtxt(filename)
@@ -182,7 +182,7 @@ def generate_bootstrap_data(eod_aapl_us_diff, number_of_bootstrap_samples):
             if index < number_of_rows_loaded:
                 continue
 
-        random_index = numpy.random.randint(len(eod_aapl_us_diff), size=len(eod_aapl_us_diff))
+        random_index = numpy.random.randint(len(eod_aapl_us_diff), size=len(eod_aapl_us_diff)) # TODO: use new RNG
         bootstrap_sample = eod_aapl_us_diff[random_index]
         bootstrap_data[index] = bootstrap_sample
 
