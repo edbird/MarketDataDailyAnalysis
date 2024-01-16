@@ -14,7 +14,7 @@ async def async_driver():
     client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://192.168.0.239:27017')
 
     database = client['market_data_analysis']
-    collection = database['maximum_likelihood_pseudodata']
+    collection = database['experiment_record_aapl_pseudodata']
 
     document_count = 0
 
@@ -92,13 +92,15 @@ def process_experiment_record(experiment_record):
     optimize_mean_3 = experiment_record_3.get_optimize_mean()
     optimize_stddev_3 = experiment_record_3.get_optimize_stddev()
 
-    if check_numerical_difference(optimize_mean, optimize_mean_3, 1.0e-3):
+    if check_numerical_difference(optimize_mean, optimize_mean_3, 1.0e-2):
         print(f'optimize mean differs when re-running with SIMPLEX method')
+        print(f'{experiment_record.get_experiment_id()}')
         print(f'{optimize_mean}, {optimize_mean_3}')
         print(f'percentage difference {calculate_percentage_difference(optimize_mean, optimize_mean_3)}')
 
-    if check_numerical_difference(optimize_stddev, optimize_stddev_3, 1.0e-3):
+    if check_numerical_difference(optimize_stddev, optimize_stddev_3, 1.0e-2):
         print(f'optimize stddev differs when re-running with SIMPLEX method')
+        print(f'{experiment_record.get_experiment_id()}')
         print(f'{optimize_stddev}, {optimize_stddev_3}')
         print(f'percentage difference {calculate_percentage_difference(optimize_stddev, optimize_stddev_3)}')
 

@@ -15,6 +15,8 @@ import sys
 import datetime
 from datetime import timezone
 
+import numpy
+
 from multiprocessing import Pool
 
 
@@ -135,6 +137,9 @@ def parallel_function(args):
 
     print(f'Starting worker {worker_index}')
 
+    # create Random Number Generator
+    rng = numpy.random.default_rng()
+
     experiment_records = []
 
     experiment_batch_id_offset = worker_index * batch_size
@@ -147,7 +152,7 @@ def parallel_function(args):
         #experiment_id = experiment_id_offset + batch_index * num_workers + worker_index
         experiment_id = experiment_id_offset + experiment_batch_id_offset + batch_index
 
-        experiment_record = run_pseudodata_experiment(data, experiment_id)
+        experiment_record = run_pseudodata_experiment(rng, data, experiment_id)
         #experiment_record.experiment_id = experiment_id
 
         experiment_records.append(experiment_record)
