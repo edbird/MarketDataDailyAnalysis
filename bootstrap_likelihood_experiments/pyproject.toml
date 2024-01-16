@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bootstrap_likelihood_experiments"
+version = "1.0.0"
+description = "Experiments relating to Bootstraps and Likelihood Distributions"
+
+[tools.setuptools.packages.find]
+where = ["src"]
