@@ -20,7 +20,7 @@ def run_1_experiment(batch_size, mean, stddev, debug=False):
 
     likelihood_value = 1.0
 
-    random_gaussian_values = numpy.random.normal(mean, stddev, size=batch_size)
+    random_gaussian_values = numpy.random.normal(mean, stddev, size=batch_size) # TODO: move to new style RNG
 
     normalization_factor = 0.5 * 1.0 / math.sqrt(math.pi)
     likelihood_values = scipy.stats.norm.pdf(random_gaussian_values, mean_model, stddev_model) / normalization_factor
@@ -60,10 +60,10 @@ def plot_results(*likelihood_values_per_experiment, bins=100):
         ax.hist(experiment, bins, alpha=0.2)
 
     figure.savefig('gaussian-likelihood-experiment.pdf')
-    
+
 
 def plot_single_experiment(likelihood_values, cl_value, bins=100):
-    
+
     figure = plt.figure()
     p1 = ax = figure.add_subplot(1, 1, 1)
 
@@ -74,10 +74,10 @@ def plot_single_experiment(likelihood_values, cl_value, bins=100):
     y = bin_counts[x_index]
     print(f'x={x}, y={y}')
     p2 = ax.plot([x, x], [0.0, y], 'k-')
-    
+
     ax.set_xlabel('Likelihood Value')
     ax.set_ylabel('Number of Experiments')
-    
+
     s = f'CL = {round(cl_value * 100.0, ndigits=2)} %'
     ax.text(x, y * 1.2, s)
 
@@ -109,9 +109,9 @@ def main():
     time_end = datetime.datetime.now(timezone.utc)
     time_diff = time_end - time_start
     print(f'runtime: {time_diff}')
-    
+
     # Use the results generated in Experiment 0 to calculate the 95 % CL
-    
+
     # The observed value (pretend this one comes from some observation)
     # Could more sensibly perhaps calculate the mid value (median)
     #likelihood_value_observed = likelihood_values_per_experiment_0[0]
@@ -122,9 +122,9 @@ def main():
     ##cl_high_index = round((1.0 - 2.5e-2) * float(number_of_values))
     ##print(f'index CL low, high: {cl_low_index}, {cl_high_index}')
     #print(f'index CL: {cl_low_index}')
-    
+
     # Use the results generated in Experiment 0 to calculate the CL value
-    
+
     # The observed value (pretend this one comes from some observation)
     likelihood_value_observed = likelihood_values_per_experiment_0[0]
     # Other values
@@ -134,11 +134,11 @@ def main():
     for value in likelihood_distribution_values:
         if value > likelihood_value_observed:
             count += 1
-    
+
     # P(ll > ll_obs) = ...
     cl_value = float(count) / float(len(likelihood_values_per_experiment_0))
     print(f'count={count}, len={len(likelihood_values_per_experiment_0)}, CL={cl_value}')
-    
+
     plot_single_experiment(likelihood_values_per_experiment_0, cl_value)
 
 
