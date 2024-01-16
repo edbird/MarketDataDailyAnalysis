@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+    This script calculates the average value of a Gaussian
+    (Average y value, not expected value)
+"""
+
 
 import math
 import numpy
@@ -11,13 +16,14 @@ import scipy
 import copy
 
 
-def run_experiment():
+def run_experiment(rng):
 
     mean = 0.0
     stddev = 1.0
 
     batch_size = 100000
-    random_gaussian_values = numpy.random.normal(mean, stddev, size=batch_size)
+    #random_gaussian_values = numpy.random.normal(mean, stddev, size=batch_size)
+    random_gaussian_values = rng.gaussian(mean, stddev, size=batch_size) # TODO check correct
 
     random_gaussian_values = scipy.stats.norm.pdf(random_gaussian_values, mean, stddev)
 
@@ -44,7 +50,7 @@ def main():
     average_gaussian_values = numpy.zeros(number_of_experiments)
 
     for index in range(number_of_experiments):
-        average_gaussian_values[index] = run_experiment()
+        average_gaussian_values[index] = run_experiment(rng)
 
     print(f'average gaussian: {average_gaussian_values.mean()} +- {average_gaussian_values.std()}')
     print(f'Integral of Gaussian squared: {0.5 * 1.0 / math.sqrt(math.pi)}')
